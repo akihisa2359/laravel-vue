@@ -4,7 +4,7 @@ FROM node:16.14-buster
 RUN apt-get update -y \
     && apt-get install -y unattended-upgrades\
     && unattended-upgrade -d \
-    && npm install -g @vue/cli \
+    # && npm install -g @vue/cli \
     ;
 
 # Set working directory
