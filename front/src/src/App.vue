@@ -1,10 +1,28 @@
 <template>
-  <nav>
+  <div class="container">
+  <HeaderComponent />
+  <!-- <nav>
     <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
+    <router-link to="/about">About</router-link> |
+    <router-link to="/create">Create</router-link>
+  </nav> -->
   <router-view/>
+  </div>
 </template>
+
+<script>
+import HeaderComponent from '@/components/HeaderComponent.vue'
+
+export default {
+  components: {
+    HeaderComponent
+  },
+  setup() {
+    
+  },
+}
+</script>
+
 
 <style lang="scss">
 #app {
