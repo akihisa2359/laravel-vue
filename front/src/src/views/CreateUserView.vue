@@ -4,29 +4,31 @@
       <div class="field">
         <label class="label">ユーザー名</label>
         <div class="control has-icons-left has-icons-right">
-          <input class="input" :class="{'is-success': name.meta.valid, 'is-danger': errors.name}" type="text" placeholder="username" v-model="name.value.value">
+          <input class="input" :class="{'is-success': name.meta.valid && !apiErrors.name, 'is-danger': errors.name || apiErrors.name}" type="text" placeholder="username" v-model="name.value.value">
           <span class="icon is-small is-left">
             <i class="fas fa-user"></i>
           </span>
           <span class="icon is-small is-right">
-            <i :class="{'fas fa-check': name.meta.valid, 'fas fa-exclamation-triangle': errors.name}"></i>
+            <i :class="{'fas fa-check': name.meta.valid && !apiErrors.name, 'fas fa-exclamation-triangle': errors.name || apiErrors.name}"></i>
           </span>
         </div>
         <p class="help is-danger">{{ errors.name }}</p>
+        <p class="help is-danger">{{ apiErrors.name }}</p>
       </div>
 
       <div class="field">
         <label class="label">メールアドレス</label>
         <div class="control has-icons-left has-icons-right">
-          <input class="input" :class="{'is-success': email.meta.valid, 'is-danger': errors.email}" type="email" placeholder="email" :value="email.value.value" @blur="email.handleChange">
+          <input class="input" :class="{'is-success': email.meta.valid && !apiErrors.email, 'is-danger': errors.email || apiErrors.email}" type="email" placeholder="email" :value="email.value.value" @blur="email.handleChange">
           <span class="icon is-small is-left">
             <i class="fas fa-envelope"></i>
           </span>
           <span class="icon is-small is-right">
-            <i :class="{'fas fa-check': email.meta.valid, 'fas fa-exclamation-triangle': errors.email}"></i>
+            <i :class="{'fas fa-check': email.meta.valid && !apiErrors.email, 'fas fa-exclamation-triangle': errors.email || apiErrors.email}"></i>
           </span>
         </div>
         <p class="help is-danger">{{ errors.email }}</p>
+        <p class="help is-danger">{{ apiErrors.email }}</p>
       </div>
 
       <div class="field">
@@ -50,11 +52,11 @@
 </template>
 
 <script>
-// import { computed } from 'vue'
 import ApiService from '@/services/ApiService';
 import { useField, useForm } from 'vee-validate';
 import router from '@/router'
 import * as yup from 'yup';
+import { reactive } from '@vue/reactivity';
 
 export default {
   setup() {
@@ -75,13 +77,28 @@ export default {
     const name = useField('name')
     const email = useField('email')
     const password = useField('password')
-
+    const apiErrors = reactive({})
+    
     const create = handleSubmit(async (values) => {
       if (values) {
-        console.log(values);
-        const res = await ApiService.register(values)
-        console.log(res);
-        router.push('/');
+        try {
+          apiErrors['name'] = ''
+          apiErrors['email'] = ''
+          await ApiService.register(values)
+          router.push('/');
+        } catch (error) {
+          const res = error.response
+          if (res) {
+            if (res.data.errors.name) {
+              apiErrors['name'] = res.data.errors.name[0]
+            }
+            if (res.data.errors.email) {
+              apiErrors['email'] = res.data.errors.email[0]
+            }
+          }
+          console.log(error);
+          
+        }
       }
     })
 
@@ -91,6 +108,7 @@ export default {
       email,
       password,
       errors,
+      apiErrors,
       meta,
     }
   },
