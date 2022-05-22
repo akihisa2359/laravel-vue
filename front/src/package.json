@@ -4,13 +4,18 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "build:previous": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "start": "node server.js",
+    "build:client": "vue-cli-service build --dest dist/client",
+    "build:server": "SSR=1 vue-cli-service build --dest dist/server",
+    "build": "npm run build:client && npm run build:server"
   },
   "dependencies": {
     "axios": "^0.27.2",
     "bulma": "^0.9.3",
     "core-js": "^3.8.3",
+    "experss": "^0.0.1-security",
     "vee-validate": "^4.5.11",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
@@ -28,7 +33,9 @@
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
     "sass": "^1.32.7",
-    "sass-loader": "^12.0.0"
+    "sass-loader": "^12.0.0",
+    "webpack-manifest-plugin": "^5.0.0",
+    "webpack-node-externals": "^3.0.0"
   },
   "eslintConfig": {
     "root": true,
