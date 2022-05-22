@@ -55,6 +55,9 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255', 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8'],
+        ], [
+            'name.unique' => 'この名前は既に利用されています',
+            'email.unique' => 'このメールアドレスは利用できません',
         ]);
     }
 
