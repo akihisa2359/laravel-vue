@@ -19,6 +19,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('register', 'Auth\RegisterController@register');
 
+Route::post('post/create', 'PostController@create');
+
 Route::options('{all}', function () {
     $response = Response::make('');
     return $response;
